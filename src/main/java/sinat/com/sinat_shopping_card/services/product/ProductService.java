@@ -1,6 +1,7 @@
-package sinat.com.sinat_shopping_card.service.product;
+package sinat.com.sinat_shopping_card.services.product;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import sinat.com.sinat_shopping_card.entity.Category;
 import sinat.com.sinat_shopping_card.entity.Product;
 import sinat.com.sinat_shopping_card.exceptions.ProductNotFoundException;
@@ -13,8 +14,9 @@ import java.nio.file.ProviderNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 @RequiredArgsConstructor
-public class ProductService implements IProductService{
+public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
@@ -22,7 +24,7 @@ public class ProductService implements IProductService{
     @Override
     public Product addProduct(AddProductRequest request) {
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
-                .orElseGet(()->{
+                .orElseGet(() -> {
                     Category newCategory = new Category(request.getCategory().getName());
 
                     return categoryRepository.save(newCategory);
@@ -32,7 +34,7 @@ public class ProductService implements IProductService{
 
     }
 
-    private Product createProduct(AddProductRequest request, Category category){
+    private Product createProduct(AddProductRequest request, Category category) {
         return new Product(
                 request.getName(),
                 request.getBrand(),
@@ -46,28 +48,29 @@ public class ProductService implements IProductService{
     @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(()-> new ProviderNotFoundException("Message not found"));
+                .orElseThrow(() -> new ProviderNotFoundException("Message not found"));
 
     }
 
     @Override
     public void deleteProductById(Long id) {
         productRepository.findById(id).ifPresentOrElse(productRepository::delete,
-                ()-> { throw new ProviderNotFoundException("Product not found");
-        });
+                () -> {
+                    throw new ProviderNotFoundException("Product not found");
+                });
 
     }
 
     @Override
     public Product updateProduct(UpdateProductRequest request, Long productId) {
         return productRepository.findById(productId)
-                .map(existingProduct -> updateProduct(existingProduct, request))
-                .map(productRepository :: save)
-                .orElseThrow(()-> new ProductNotFoundException("Product not found"));
+                .map(existingProduct -> UpdateExistingProduct(existingProduct, request))
+                .map(productRepository::save)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
 
     }
 
-    private Product UpdateExistingProduct(Product existingProduct, UpdateProductRequest request){
+    private Product UpdateExistingProduct(Product existingProduct, UpdateProductRequest request) {
         existingProduct.setName(request.getName());
         existingProduct.setBrand(request.getBrand());
         existingProduct.setPrice(request.getPrice());
@@ -105,7 +108,6 @@ public class ProductService implements IProductService{
     public List<Product> getProductsByName(String name) {
         return productRepository.findByName(name);
     }
-
     @Override
     public List<Product> getProductsByBrandAndName(String brand, String name) {
         return productRepository.findByBrandAndName(brand, name);

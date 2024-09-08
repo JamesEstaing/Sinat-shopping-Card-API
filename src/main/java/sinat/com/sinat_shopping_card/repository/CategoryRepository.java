@@ -5,4 +5,6 @@ import sinat.com.sinat_shopping_card.entity.Category;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     Category findByName(String name);
+
+    boolean existsByName(String name);
 }

@@ -1,4 +1,4 @@
-package sinat.com.sinat_shopping_card.service.product;
+package sinat.com.sinat_shopping_card.services.product;
 
 import sinat.com.sinat_shopping_card.entity.Product;
 import sinat.com.sinat_shopping_card.request.AddProductRequest;
@@ -10,7 +10,7 @@ public interface IProductService {
     Product addProduct(AddProductRequest request);
     Product getProductById (Long id);
     void deleteProductById (Long id);
-    Product updateProduct(UpdateProductRequest request, Long productId);
+    Product updateProduct(UpdateProductRequest product, Long productId);
     List<Product> getAllProducts();
     List<Product> getProductsByCategory(String category);
     List<Product> getProductsByBrand(String brand);
