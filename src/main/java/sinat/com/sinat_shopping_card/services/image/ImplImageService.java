@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface ImplImageService {
     Image getImageById(Long id);
-    void deleteImageById(Long id);
-   // List<ImageDto> saveImage(List<MultipartFile> files, Long productId);
+    void deleteImageById(Long imageId);
+
 
     List<ImageDto> saveImages(List<MultipartFile> files, Long productId);
 
